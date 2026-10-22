@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { NavLinks } from "./Navlinks";
-import { Username } from "./Username";
+import { Username } from "../Username";
 
 // Placeholder until auth exists; swap for the real signed-in user later.
 const currentUser = { email: "maria@upatras.gr" };
