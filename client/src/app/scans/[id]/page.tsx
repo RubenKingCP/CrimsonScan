@@ -36,7 +36,7 @@ export default async function ScanResultsPage({ params }: { params: Promise<{ id
             <h1 className="text-3xl font-bold text-gray-900">{scan.siteName}</h1>
             <p className="mt-1 text-sm text-gray-600">
               <span className="font-mono">{scan.domain}</span>
-              {` · ${scan.scanType} · ${scan.scannedAt} · ${scan.pagesCrawled} pages crawled · ${scan.durationMin} min`}
+              {` · ${scan.scanType} · ${formatScanDate(scan.scannedAt)} · ${scan.pagesCrawled} pages crawled · ${scan.durationMin} min`}
             </p>
           </div>
 
