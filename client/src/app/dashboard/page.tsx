@@ -1,19 +1,25 @@
 // Dashboard (/dashboard): the user's sites, summary stats and their latest findings.
 import Link from "next/link";
-import { mockSites } from "@/lib/mockSites";
+import { mockSites } from "@/lib/mockSites";                // TEMP: sites
+import { mockScans } from "@/lib/mockScans";                // TEMP: scans
+import { attachScans, countFindings, sortForDashboard } from "@/lib/scans";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { SitesTable } from "@/components/dashboard/SitesTable";
 
-export default function DashboardPage() {
-  const sites = mockSites; // TEMP: replace with real data from the API
+const DASHBOARD_LIMIT = 5; // rows shown here; the rest are on /scans
 
+export default function DashboardPage() {
+  const sites = attachScans(mockSites, mockScans);           // each site + its scan
+  const rows = sortForDashboard(sites).slice(0, DASHBOARD_LIMIT); // first 5 in dashboard order
+
+  // Stats use ALL sites, not just the 5 shown.
   const verifiedCount = sites.filter((s) => s.status === "verified").length;
   const totals = sites.reduce(
-    (sum, s) => ({
-      high: sum.high + (s.findings?.high ?? 0),
-      medium: sum.medium + (s.findings?.medium ?? 0),
-      low: sum.low + (s.findings?.low ?? 0),
-    }),
+    (sum, s) => {
+      if (!s.scan) return sum;                               // never scanned: adds nothing
+      const c = countFindings(s.scan.findings);              // this site's { high, medium, low }
+      return { high: sum.high + c.high, medium: sum.medium + c.medium, low: sum.low + c.low };
+    },
     { high: 0, medium: 0, low: 0 }
   );
   const openFindings = totals.high + totals.medium + totals.low;
@@ -46,7 +52,7 @@ export default function DashboardPage() {
           />
         </div>
 
-        <SitesTable sites={sites} />
+        <SitesTable sites={rows} totalCount={sites.length} />
       </div>
     </main>
   );

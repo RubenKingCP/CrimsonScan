@@ -1,6 +1,7 @@
 // Scan results (/scans/[id]): one scan's summary and findings.
 // Only built when visited, from the dashboard's "View results" or the all-scans page.
 import Link from "next/link";
+import { formatScanDate } from "@/lib/scans";    // add to the imports
 import { notFound } from "next/navigation";      // shows the 404 page
 import { mockScans } from "@/lib/mockScans";      // TEMP data source
 import type { Severity } from "@/lib/types";
@@ -35,7 +36,7 @@ export default async function ScanResultsPage({ params }: { params: Promise<{ id
             <h1 className="text-3xl font-bold text-gray-900">{scan.siteName}</h1>
             <p className="mt-1 text-sm text-gray-600">
               <span className="font-mono">{scan.domain}</span>
-              {` · ${scan.scanType} · ${scan.finishedAt} · ${scan.pagesCrawled} pages crawled · ${scan.durationMin} min`}
+              {` · ${scan.scanType} · ${scan.scannedAt} · ${scan.pagesCrawled} pages crawled · ${scan.durationMin} min`}
             </p>
           </div>
 

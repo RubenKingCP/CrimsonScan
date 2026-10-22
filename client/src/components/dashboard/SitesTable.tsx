@@ -1,13 +1,27 @@
 // Table of the user's sites with status, last scan, findings and an action link.
 import Link from "next/link";
-import type { Site } from "@/lib/types";
+import type { SiteWithScan } from "@/lib/types";
+import { countFindings, formatScanDate } from "@/lib/scans";
 import { StatusBadge } from "./StatusBadge";
 import { FindingsSummary } from "./FindingsSummary";
 
-export function SitesTable({ sites }: { sites: Site[] }) {
+type Props = {
+  sites: SiteWithScan[];   // the rows to show (already sorted and limited by the page)
+  totalCount: number;      // how many sites the user has in total
+};
+
+export function SitesTable({ sites, totalCount }: Props) {
   return (
     <section className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-      <h2 className="border-b border-gray-200 px-5 py-4 font-semibold text-gray-900">Sites</h2>
+      <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4">
+        <h2 className="font-semibold text-gray-900">Sites</h2>
+        {totalCount > sites.length && (
+          // Only shown when some sites are hidden by the 5-row limit
+          <Link href="/scans" className="text-sm font-medium text-crimson hover:underline">
+            View all {totalCount} →
+          </Link>
+        )}
+      </div>
 
       {sites.length === 0 ? (
         <p className="px-5 py-10 text-center text-sm text-gray-500">
@@ -39,8 +53,8 @@ export function SitesTable({ sites }: { sites: Site[] }) {
   );
 }
 
-function SiteRow({ site }: { site: Site }) {
-  const verified = site.status === "verified";
+function SiteRow({ site }: { site: SiteWithScan }) {
+  const { scan } = site; // the site's scan, or null if never scanned
 
   return (
     <tr className="hover:bg-gray-50">
@@ -51,18 +65,29 @@ function SiteRow({ site }: { site: Site }) {
       <td className="px-5 py-3">
         <StatusBadge status={site.status} />
       </td>
-      <td className="px-5 py-3 text-gray-600">{site.lastScan ?? "Never"}</td>
+      <td className="whitespace-nowrap px-5 py-3 text-gray-600">
+        {scan ? formatScanDate(scan.scannedAt) : "Never"} {/* date from the scan */}
+      </td>
       <td className="px-5 py-3">
-        <FindingsSummary findings={site.findings} />
+        <FindingsSummary findings={scan ? countFindings(scan.findings) : null} />
+        {/* counts calculated from the scan's findings; null shows "—" */}
       </td>
       <td className="px-5 py-3 text-right">
-        <Link
-          href={verified ? `/scans/${site.id}` : `/sites/${site.id}/verify`}
-          className="font-medium text-crimson underline underline-offset-2 hover:text-crimson/80"
-        >
-          {verified ? "View results" : "Verify"}
-        </Link>
+        <SiteAction site={site} />
       </td>
     </tr>
   );
+}
+
+// The link on the right depends on the site's state.
+function SiteAction({ site }: { site: SiteWithScan }) {
+  const linkClass = "whitespace-nowrap font-medium text-crimson underline underline-offset-2 hover:text-crimson/80";
+
+  if (site.status === "pending") {
+    return <Link href={`/sites/${site.id}/verify`} className={linkClass}>Verify</Link>;  // not verified yet
+  }
+  if (site.scan) {
+    return <Link href={`/scans/${site.scan.id}`} className={linkClass}>View results</Link>; // uses the SCAN's id
+  }
+  return <span className="text-gray-400">Not scanned</span>; // verified, but no scan yet
 }

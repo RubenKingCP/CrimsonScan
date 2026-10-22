@@ -3,14 +3,16 @@ export type SiteStatus = "verified" | "pending";
 
 export type FindingCounts = { high: number; medium: number; low: number };
 
+// A site the user has added. Only facts about the site itself; scan data lives in Scan.
 export type Site = {
   id: string;
-  name: string;
-  domain: string;
-  status: SiteStatus;
-  lastScan: string | null;
-  findings: FindingCounts | null;
+  name: string;            // e.g. "My Shop"
+  domain: string;          // e.g. "myshop.example"; also links the site to its scan
+  status: SiteStatus;      // verified or pending
 };
+
+// A site together with its scan (null if it was never scanned), used by the dashboard.
+export type SiteWithScan = Site & { scan: Scan | null };
 
 // The three severity levels a finding can have.
 export type Severity = "high" | "medium" | "low";
@@ -30,7 +32,7 @@ export type Scan = {
   siteName: string;      // e.g. "My Shop"
   domain: string;        // e.g. "myshop.example"
   scanType: string;      // e.g. "Full scan"
-  finishedAt: string;    // display text, e.g. "Today 17:02"
+  scannedAt: string;    // display text, e.g. "Today 17:02"
   pagesCrawled: number;  // how many pages ZAP visited
   durationMin: number;   // how long the scan took, in minutes
   findings: Finding[];   // every problem found
