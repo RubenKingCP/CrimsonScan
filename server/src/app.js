@@ -14,5 +14,8 @@ app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use("/auth", require("./modules/auth/auth.routes"));
 app.use("/scans", require("./modules/scans/scan.routes"));
 
+app.use("/sites", require("./modules/sites/site.routes"));
+
+
 app.use(errorHandler);
 module.exports = app;

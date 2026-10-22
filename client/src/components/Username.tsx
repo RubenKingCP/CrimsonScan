@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getMe } from "../lib/api";
+import { getMe } from "../lib/api/client";
 
 // Displays the current user's username, or "Guest" if not signed in. Client-only because it fetches from the API.
 export function Username() {

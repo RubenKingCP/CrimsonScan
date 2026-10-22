@@ -1,17 +1,16 @@
 // Dashboard (/dashboard): the user's sites, summary stats and their latest findings.
 import Link from "next/link";
-import { mockSites } from "@/lib/mockSites";                // TEMP: sites
-import { mockScans } from "@/lib/mockScans";                // TEMP: scans
+import { getScans, getSites } from "@/lib/api/server";      // sites: real API · scans: mock data for now
 import { attachScans, countFindings, sortForDashboard } from "@/lib/scans";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { SitesTable } from "@/components/dashboard/SitesTable";
 
 const DASHBOARD_LIMIT = 5; // rows shown here; the rest are on /scans
 
-export default function DashboardPage() {
-  const sites = attachScans(mockSites, mockScans);           // each site + its scan
+export default async function DashboardPage() {
+  const [siteList, scanList] = await Promise.all([getSites(), getScans()]); // both requests at once
+  const sites = attachScans(siteList, scanList);              // each site + its scan
   const rows = sortForDashboard(sites).slice(0, DASHBOARD_LIMIT); // first 5 in dashboard order
-
   // Stats use ALL sites, not just the 5 shown.
   const verifiedCount = sites.filter((s) => s.status === "verified").length;
   const totals = sites.reduce(
