@@ -6,8 +6,8 @@ module.exports = function requireAuth(req, res, next) {
   if (!token) return res.status(401).json({ error: "Not signed in" });
   try {
     req.user = jwt.verify(token, process.env.JWT_SECRET);
-    next();
   } catch {
-    res.status(401).json({ error: "Invalid session" });
+    return res.status(401).json({ error: "Invalid session" });
   }
+  next();
 };

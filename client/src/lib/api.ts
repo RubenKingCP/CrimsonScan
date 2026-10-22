@@ -11,7 +11,8 @@ async function request(path: string, options: RequestInit = {}) {
   return res.json();
 }
 
-export const getMe = () => request("/auth/me");
+// Rreturn the user name
+export const getMe = (): Promise<{ username: string }> => request("/auth/me");
 export const getRepos = () => request("/github/repos");
 export const getScans = () => request("/scans");
 export const getScan = (id: string) => request(`/scans/${id}`);

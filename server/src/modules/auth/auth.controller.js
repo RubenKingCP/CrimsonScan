@@ -137,7 +137,8 @@ exports.logout = (req, res) => {
 
 // Function to get the current logged-in user's information
 exports.me = async (req, res) => {
-  const user = await User.findById(req.user.id).select("username avatarUrl");
+  const user = await User.findById(req.user.id).select("username");
   if (!user) return res.status(401).json({ error: "User not found" });
-  res.json(user);
+  console.log("Current user:", user);
+  res.json({ username: user.username });
 };
