@@ -1,0 +1,16 @@
+# Runs on the DigitalOcean droplet: ZAP and the Semgrep runner, restarted automatically.
+services:
+  zap:
+    image: zaproxy/zap-stable
+    command: zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.key=${ZAP_API_KEY} -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true
+    restart: always
+    ports:
+      - "8080:8080"
+
+  semgrep-runner:
+    build: ./semgrep-runner
+    environment:
+      - SCANNER_API_KEY=${SCANNER_API_KEY}
+    restart: always
+    ports:
+      - "8081:8081"

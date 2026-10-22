@@ -1,0 +1,9 @@
+{
+  "name": "crimsonscan-server",
+  "private": true,
+  "scripts": { "dev": "node --watch src/server.local.js" },
+  "dependencies": {
+    "express": "latest", "mongoose": "latest", "jsonwebtoken": "latest", "cookie-parser": "latest",
+    "cors": "latest", "helmet": "latest", "octokit": "latest"
+  }
+}

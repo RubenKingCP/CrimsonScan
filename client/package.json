@@ -1,0 +1,7 @@
+{
+  "name": "crimsonscan-client",
+  "private": true,
+  "scripts": { "dev": "next dev", "build": "next build", "start": "next start" },
+  "dependencies": { "next": "latest", "react": "latest", "react-dom": "latest", "shiki": "latest" },
+  "devDependencies": { "tailwindcss": "latest", "typescript": "latest", "@types/react": "latest" }
+}
