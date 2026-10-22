@@ -1,13 +1,13 @@
-// User: GitHub identity, encrypted GitHub token, references to scans.
+// User: GitHub identity and GitHub token. Created or updated on every sign-in.
 const { Schema, model, models } = require("mongoose");
 
 const userSchema = new Schema(
   {
     githubId: { type: String, required: true, unique: true },
-    username: String,
+    username: { type: String, required: true },
     avatarUrl: String,
-    githubToken: String, // store encrypted
-    scans: [{ type: Schema.Types.ObjectId, ref: "Scan" }],
+    githubToken: { type: String, select: false }, // hidden unless asked for with .select("+githubToken")
+    lastLoginAt: Date,
   },
   { timestamps: true }
 );

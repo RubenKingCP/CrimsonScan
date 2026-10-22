@@ -1,11 +1,13 @@
 // Landing page (/): what CrimsonScan does + "Sign in with GitHub".
-import { Navbar } from '../components/Navbar';
+import  SigninNavbar  from "../components/SigninNavbar";
 
 export default function Home() {
   return (
     <main>
-      <Navbar />
       <section>
+        <SigninNavbar />
+
+
         <h1>CrimsonScan</h1>
         <p>Welcome to CrimsonScan!</p>
       </section>

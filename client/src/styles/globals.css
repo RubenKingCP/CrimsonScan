@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+
+/* Custom theme colors */
+@theme {
+    --color-crimson: #B3122E;
+}
+
+/* Page defaults */
+@layer base {
+    body {
+        @apply bg-gray-50 text-gray-900 antialiased;
+    }
+}
